@@ -1,0 +1,26 @@
+Sum of Two Numbers
+Given two integers, output their sum.
+Two space-separated integers a and b.
+A single integer: the sum of a and b.
+2 3
+5
+testcases/problem1.txt
+output/problem1.txt
+===
+Print Hello
+Output the word Hello.
+No input required.
+Print "Hello"
+<empty>
+Hello
+testcases/problem2.txt
+output/problem2.txt
+===
+Max of Two
+Print the maximum of two integers.
+Two integers.
+The larger of the two.
+8 15
+15
+testcases/problem3a.txt,testcases/problem3b.txt
+output/problem3a.txt,output/problem3b.txt
