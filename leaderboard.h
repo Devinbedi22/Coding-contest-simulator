@@ -15,7 +15,7 @@ struct ScoreEntry {
     int score;
 };
 
-// Loads all scores and keeps only the highest for each user/problem
+ 
 vector<ScoreEntry> loadScores() {
     ifstream file("scores.txt");
     unordered_map<string, unordered_map<string, int>> userProblemMap;

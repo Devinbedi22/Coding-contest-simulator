@@ -4,7 +4,8 @@
 #include <string>
 #include <unordered_map>
 #include <algorithm>
-#include "sha256.h"  // Include the SHA256 hashing function
+#include <conio.h>  
+#include "sha256.h"  
 
 using namespace std;
 
@@ -12,6 +13,24 @@ string toLower(const string& s) {
     string result = s;
     transform(result.begin(), result.end(), result.begin(), ::tolower);
     return result;
+}
+ 
+string getHiddenPassword() {
+    string password;
+    char ch;
+    while ((ch = _getch()) != '\r') {   
+        if (ch == '\b') {  
+            if (!password.empty()) {
+                password.pop_back();
+                cout << "\b \b";
+            }
+        } else if (isprint(ch)) {
+            password += ch;
+            cout << '*';
+        }
+    }
+    cout << endl;
+    return password;
 }
 
 string loginUser() {
@@ -31,7 +50,7 @@ string loginUser() {
     cout << "Enter username: ";
     cin >> user;
     cout << "Enter password: ";
-    cin >> pass;
+    pass = getHiddenPassword();
 
     string loweredUser = toLower(user);
     string hashedPass = sha256(pass);
@@ -74,7 +93,8 @@ string registerUser() {
     }
 
     cout << "Choose password: ";
-    cin >> pass;
+    pass = getHiddenPassword();
+
     if (pass.empty() || pass.find(',') != string::npos) {
         cout << "❌ Invalid password. Cannot be empty or contain commas.\n";
         return "";

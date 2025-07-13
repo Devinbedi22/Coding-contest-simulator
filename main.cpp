@@ -139,7 +139,7 @@ int main() {
     cout << "\nEnter path to your C++ submission file (e.g., submission.cpp): ";
     string filepath;
     cin >> filepath;
-    timeUp = true; // stop timer when user submits
+    timeUp = true;  
     countdownThread.join();
 
     cout << "\nCompiling your code...\n";
