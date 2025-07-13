@@ -3,8 +3,16 @@
 #include <fstream>
 #include <string>
 #include <unordered_map>
+#include <algorithm>
+#include "sha256.h"  // Include the SHA256 hashing function
 
 using namespace std;
+
+string toLower(const string& s) {
+    string result = s;
+    transform(result.begin(), result.end(), result.begin(), ::tolower);
+    return result;
+}
 
 string loginUser() {
     unordered_map<string, string> credentials;
@@ -14,9 +22,9 @@ string loginUser() {
     while (getline(file, line)) {
         size_t comma = line.find(',');
         if (comma != string::npos) {
-            user = line.substr(0, comma);
-            pass = line.substr(comma + 1);
-            credentials[user] = pass;
+            string storedUser = toLower(line.substr(0, comma));
+            string storedPass = line.substr(comma + 1);
+            credentials[storedUser] = storedPass;
         }
     }
 
@@ -25,7 +33,10 @@ string loginUser() {
     cout << "Enter password: ";
     cin >> pass;
 
-    if (credentials.count(user) && credentials[user] == pass) {
+    string loweredUser = toLower(user);
+    string hashedPass = sha256(pass);
+
+    if (credentials.count(loweredUser) && credentials[loweredUser] == hashedPass) {
         cout << "✅ Login successful.\n";
         return user;
     } else {
@@ -44,22 +55,35 @@ string registerUser() {
         size_t comma = line.find(',');
         if (comma != string::npos) {
             string existing = line.substr(0, comma);
-            credentials[existing] = line.substr(comma + 1);
+            credentials[toLower(existing)] = line.substr(comma + 1);
         }
     }
 
     cout << "Choose username: ";
     cin >> user;
-    if (credentials.count(user)) {
+    string loweredUser = toLower(user);
+
+    if (credentials.count(loweredUser)) {
         cout << "❌ Username already exists.\n";
+        return "";
+    }
+
+    if (user.empty() || user.find(',') != string::npos) {
+        cout << "❌ Invalid username. Cannot be empty or contain commas.\n";
         return "";
     }
 
     cout << "Choose password: ";
     cin >> pass;
+    if (pass.empty() || pass.find(',') != string::npos) {
+        cout << "❌ Invalid password. Cannot be empty or contain commas.\n";
+        return "";
+    }
+
+    string hashedPass = sha256(pass);
 
     ofstream outFile("users.txt", ios::app);
-    outFile << user << "," << pass << "\n";
+    outFile << user << "," << hashedPass << "\n";
 
     cout << "✅ Registration successful.\n";
     return user;
